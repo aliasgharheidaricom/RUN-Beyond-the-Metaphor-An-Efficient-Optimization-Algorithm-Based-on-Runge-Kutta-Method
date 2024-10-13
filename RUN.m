@@ -33,7 +33,6 @@
                                                                        %(HHO)-2019- http://www.aliasgharheidari.com/HHO.html  
 %---------------------------------------------------------------------------------------------------------------------------
 
-
 function [Best_Cost,Best_X,Convergence_curve]=RUN(nP,MaxIt,lb,ub,dim,fobj)
 
 Cost=zeros(nP,1);                % Record the Fitness of all Solutions
@@ -64,7 +63,9 @@ while it<MaxIt
             lBest = X(ind_l,:);   
             
             [A,B,C]=RndX(nP,i);   % Determine Three Random Indices of Solutions
+            ABC =[A,B,C];
             [~,ind1] = min(Cost([A B C]));
+            ind_ABC = ABC(ind1);
             
             % Determine Delta X (Eqs. 11.1 to 11.3)
             gama = rand.*(X(i,:)-rand(1,dim).*(ub-lb)).*exp(-4*it/MaxIt);  
@@ -72,11 +73,11 @@ while it<MaxIt
             DelX = 2*rand(1,dim).*(abs(Stp));
             
             % Determine Xb and Xw for using in Runge Kutta method
-            if Cost(i)<Cost(ind1)                
+            if Cost(i)<Cost(ind_ABC)                
                 Xb = X(i,:);
-                Xw = X(ind1,:);
+                Xw = X(ind_ABC,:);
             else
-                Xb = X(ind1,:);
+                Xb = X(ind_ABC,:);
                 Xw = X(i,:);
             end
 
@@ -182,6 +183,12 @@ function [A,B,C]=RndX(nP,i)
 Qi=randperm(nP);Qi(Qi==i)=[];
 A=Qi(1);B=Qi(2);C=Qi(3);
 end
+
+
+
+
+
+
 
 
 
